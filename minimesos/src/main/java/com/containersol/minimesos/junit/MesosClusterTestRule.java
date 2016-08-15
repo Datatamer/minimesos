@@ -24,12 +24,16 @@ public class MesosClusterTestRule implements TestRule {
     private MesosCluster mesosCluster;
 
     public static MesosClusterTestRule fromClassPath(String path) {
-        try (InputStream is = MesosClusterTestRule.class.getResourceAsStream(path)) {
-            MesosCluster cluster = new MesosClusterContainersFactory().createMesosCluster(is);
-            return new MesosClusterTestRule(cluster);
-        } catch (IOException e) {
-            throw new MinimesosException("Could not read minimesosFile on classpath " + path, e);
-        }
+      return fromClassPath(path, MesosClusterTestRule.class);
+    }
+
+    public static MesosClusterTestRule fromClassPath(String path, Class<?> context) {
+      try (InputStream is = context.getResourceAsStream(path)) {
+        MesosCluster cluster = new MesosClusterContainersFactory().createMesosCluster(is);
+        return new MesosClusterTestRule(cluster);
+      } catch (IOException e) {
+        throw new MinimesosException("Could not read minimesosFile on classpath " + path, e);
+      }
     }
 
     public static MesosClusterTestRule fromFile(String minimesosFilePath) {
