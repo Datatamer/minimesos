@@ -41,6 +41,8 @@ public class MesosCluster {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MesosCluster.class);
 
+    private static File hostDir;
+
     public static final String MINIMESOS_HOST_DIR_PROPERTY = "minimesos.host.dir";
     public static final String MINIMESOS_TOKEN_PREFIX = "MINIMESOS_";
 
@@ -352,11 +354,22 @@ public class MesosCluster {
      * @return container directory, which is mapped to current directory on host
      */
     public static File getHostDir() {
+        if (hostDir != null) {
+            return hostDir;
+        }
         String sp = System.getProperty(MINIMESOS_HOST_DIR_PROPERTY);
         if (sp == null) {
             sp = System.getProperty("user.dir");
         }
         return new File(sp);
+    }
+
+    /**
+     * Sets the current host directory, overriding the default host.dir, minimesos.host.dir
+     * properties.
+     */
+    public static void setHostDir(File hostDir) {
+        MesosCluster.hostDir = hostDir;
     }
 
     /**
